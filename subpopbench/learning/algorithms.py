@@ -189,8 +189,6 @@ class URM(ERM):
 
         if self.hparams['urm_generator_output'] == 'tanh':
             if self.data_type == 'images' and self.hparams['image_arch'] == 'resnet_sup_in1k':
-                # self.featurizer.network.layer4[0].relu = nn.Tanh()
-                # self.featurizer.network.layer4[1].relu = nn.Tanh()
                 self.featurizer.network.layer4[2].relu = nn.Tanh()
                 
             elif self.data_type == 'text' and self.hparams['text_arch'] == 'bert-base-uncased':

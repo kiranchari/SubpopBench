@@ -43,6 +43,7 @@ The [currently available algorithms](./subpopbench/learning/algorithms.py) are:
 * Label-Distribution-Aware Margin Loss (**LDAM**, [Cao et al., 2019](https://arxiv.org/abs/1906.07413))
 * Balanced Softmax (**BSoftmax**, [Ren et al., 2020](https://arxiv.org/abs/2007.10740))
 * Classifier Re-Training (**CRT**, [Kang et al., 2020](https://arxiv.org/abs/1910.09217))
+* Uniform Risk Minimization (**URM**, [Krishnamachari et al., 2024](https://openreview.net/forum?id=PgLbS5yp8n))
 
 Send us a PR to add your algorithm! Our implementations use the hyper-parameter grids [described here](./subpopbench/hparams_registry.py).
 
