@@ -28,6 +28,8 @@ class MLP(nn.Module):
         self.output = nn.Linear(hparams['mlp_width'], n_outputs)
         self.n_outputs = n_outputs
 
+        self.activation = nn.Identity() # added for URM, does not affect other algorithms
+
     def forward(self, x):
         x = self.input(x)
         x = self.dropout(x)
@@ -37,6 +39,9 @@ class MLP(nn.Module):
             x = self.dropout(x)
             x = F.relu(x)
         x = self.output(x)
+
+        x = self.activation(x) # added for URM, does not affect other algorithms
+
         return x
 
 
@@ -191,6 +196,8 @@ class BertFeatureWrapper(torch.nn.Module):
         )
         self.dropout = nn.Dropout(classifier_dropout)
 
+        self.activation = nn.Identity() # added for URM, does not affect other algorithms
+
     def forward(self, x):
         kwargs = {
             'input_ids': x[:, :, 0],
@@ -199,11 +206,15 @@ class BertFeatureWrapper(torch.nn.Module):
         if x.shape[-1] == 3:
             kwargs['token_type_ids'] = x[:, :, 2]
         output = self.model(**kwargs)
-        if hasattr(output, 'pooler_output'):
-            return self.dropout(output.pooler_output)
-        else:
-            return self.dropout(output.last_hidden_state[:, 0, :])
 
+        if hasattr(output, 'pooler_output'):
+            output = self.dropout(output.pooler_output)
+        else:
+            output = self.dropout(output.last_hidden_state[:, 0, :])
+
+        output = self.activation(output) # added for URM, does not affect other algorithms
+
+        return output
 
 def replace_module_prefix(state_dict, prefix, replace_with=""):
     state_dict = {

@@ -89,6 +89,23 @@ def _hparams(algorithm, dataset, random_seed):
         _hparam('stage1_model', 'model.pkl', lambda r: 'model.pkl')
         _hparam('dfr_reg', .1, lambda r: 10**r.uniform(-2, 0.5))
 
+    elif algorithm == 'URM':
+        _hparam('urm_lambda', 0.1, lambda r: float(r.uniform(0,0.2)))
+        
+        _hparam('urm_discriminator_hidden_layers', 1, lambda r: int(r.choice([1,2,3])))
+        _hparam('urm_generator_output', 'tanh', lambda r: str(r.choice(['tanh', 'relu'])))
+        _hparam('urm_discriminator_update_freq', 1, lambda r: int(r.choice([1])))
+        
+        if dataset in IMAGE_DATASETS + TABULAR_DATASET:
+            _hparam('urm_discriminator_lr', 1e-3, lambda r: 10**r.uniform(-5, -3))
+        else:
+            _hparam('urm_discriminator_lr', 1e-5, lambda r: 10**r.uniform(-6, -5))
+    
+        if dataset in TEXT_DATASETS:
+            _hparam('urm_discriminator_optimizer', 'adamw', lambda r: str(r.choice(['adamw'])))
+        else:
+            _hparam('urm_discriminator_optimizer', 'sgd', lambda r: str(r.choice(['sgd'])))
+
     # Dataset-and-algorithm-specific hparam definitions
     # Each block of code below corresponds to exactly one hparam. Avoid nested conditionals
 
